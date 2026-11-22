@@ -1,6 +1,9 @@
+from database import escursione_DAO
 from database.parco_DAO import ParcoDAO
 from database.escursione_DAO import EscursioneDAO
 from database.punto_interesse_DAO import PuntoInteresseDAO
+from model.escursione import Escursione
+
 
 class Model:
     def __init__(self):
@@ -39,6 +42,19 @@ class Model:
             --> Ogni PuntoInteresse ha un set di Escursioni.
         """
         # TODO
+        lista_dict_ponte = EscursioneDAO.get_escursioni_punti_interesse()
+        if lista_dict_ponte is None:
+            return
+
+        for dictionary in lista_dict_ponte:
+            escursione = self.escursioni_map[dictionary["id_escursione"]]  #recupera dalla tabella ponte l'oggetto collegato al ID
+            punto_interesse = self.punti_interesse_map[dictionary['id_punto_interesse']] # uguale
+
+            escursione.punti_interesse.add(punto_interesse)  #aggiungo per ogni escursione (ogg) i punti di interesse nel set che ha l oggetto nell init
+            punto_interesse.escursione.add(escursione)
+
+            return
+
 
     def genera_pacchetto(self, id_parco: str, max_giorni: int = None, max_budget: float = None):
         """
@@ -56,6 +72,12 @@ class Model:
         self._valore_ottimo = -1
 
         # TODO
+        escursioni_parco = []
+        for escursione in self.escursioni_map.values():
+            if escursione.id_parco == id_parco:
+                escursioni_parco.append(escursione) #prendo tutte ecursioni del parco scelto
+
+        self._ricorsione(0,[], 0, 0, 0, set())
 
         return self._pacchetto_ottimo, self._costo, self._valore_ottimo
 
@@ -63,3 +85,5 @@ class Model:
         """ Algoritmo di ricorsione che deve trovare il pacchetto che massimizza il voto complessivo dei visitatori"""
 
         # TODO: è possibile cambiare i parametri formali della funzione se ritenuto opportuno
+        if
+
