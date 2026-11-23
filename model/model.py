@@ -16,6 +16,7 @@ class Model:
 
         # TODO: Aggiungere eventuali altri attributi
 
+
         # Caricamento
         self.load_escursioni()
         self.load_punti_interesse()
@@ -72,10 +73,13 @@ class Model:
         self._valore_ottimo = -1
 
         # TODO
-        escursioni_parco = []
+        self._max_giorni = max_giorni
+        self._max_budget = max_budget
+        self._escursioni_parco = []
+
         for escursione in self.escursioni_map.values():
             if escursione.id_parco == id_parco:
-                escursioni_parco.append(escursione) #prendo tutte ecursioni del parco scelto
+                self._escursioni_parco.append(escursione) #prendo tutte ecursioni del parco scelto
 
         self._ricorsione(0,[], 0, 0, 0, set())
 
@@ -85,5 +89,25 @@ class Model:
         """ Algoritmo di ricorsione che deve trovare il pacchetto che massimizza il voto complessivo dei visitatori"""
 
         # TODO: è possibile cambiare i parametri formali della funzione se ritenuto opportuno
-        if
+        # terminazione
+        if valore_corrente > self._valore_ottimo:
+            self._pacchetto_ottimo = pacchetto_parziale.copy()
+            self._valore_ottimo = valore_corrente
+            self._costo = costo_corrente
+
+
+        else:
+            for i in range(start_index, len(self._escursioni_parco):
+                escursione = self._escursioni_parco[i]
+
+                punti_interesse_ok = punti_usati.intersection(escursione.punti_interesse)
+                giorni_ok = giorni
+
+
+                self._ricorsione(self, start_index, pacchetto_parziale, nuova_durata, nuovo_costo,valore_corrente, punti_usati)
+
+
+
+
+
 
