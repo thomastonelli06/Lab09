@@ -101,15 +101,18 @@ class Model:
             escursione = self._escursioni_parco[i]  #prende ogni escursione del parco dalla successiva alla precedente del parco scelto
 
             punti_interesse_ok = not punti_usati.intersection(escursione.punti_interesse) #evita doppioni punti interesse
-            giorni_ok = self._max_giorni >= durata_corrente + escursione.durata_giorni or self._max_giorni is None
-            costo_ok = self._max_budget >= costo_corrente + escursione.costo or self._max_budget is None
+            giorni_ok =self._max_giorni is None or self._max_giorni >= durata_corrente + escursione.durata_giorni
+            costo_ok = self._max_budget is None or self._max_budget >= costo_corrente + escursione.costo
 
             if punti_interesse_ok and giorni_ok and costo_ok:
-                nuovo_pacchetto = pacchetto_parziale.append(escursione)
+                nuovo_pacchetto = pacchetto_parziale.copy()
+                nuovo_pacchetto.append(escursione)
+
                 nuova_durata = durata_corrente + escursione.durata_giorni
                 nuovo_costo = costo_corrente + escursione.costo
                 nuovi_punti = punti_usati.union(escursione.punti_interesse)
-                nuovo_valore = valore_corrente + escursione.valore
+                nuovo_valore = valore_corrente + sum(punto.voto_visitatori for punto in escursione.punti_interesse)
+
 
                 self._ricorsione(i + 1, pacchetto_parziale, nuova_durata, nuovo_costo,nuovo_valore, nuovi_punti)
 
