@@ -114,7 +114,7 @@ class Model:
                 nuovo_valore = valore_corrente + sum(punto.voto_visitatori for punto in escursione.punti_interesse)
 
 
-                self._ricorsione(i + 1, pacchetto_parziale, nuova_durata, nuovo_costo,nuovo_valore, nuovi_punti)
+                self._ricorsione(i + 1, nuovo_pacchetto, nuova_durata, nuovo_costo,nuovo_valore, nuovi_punti)
 
 
 
