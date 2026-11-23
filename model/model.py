@@ -52,9 +52,9 @@ class Model:
             punto_interesse = self.punti_interesse_map[dictionary['id_punto_interesse']] # uguale
 
             escursione.punti_interesse.add(punto_interesse)  #aggiungo per ogni escursione (ogg) i punti di interesse nel set che ha l oggetto nell init
-            punto_interesse.escursione.add(escursione)
+            punto_interesse.escursioni.add(escursione)
 
-            return
+        return
 
 
     def genera_pacchetto(self, id_parco: str, max_giorni: int = None, max_budget: float = None):
@@ -96,15 +96,20 @@ class Model:
             self._costo = costo_corrente
 
 
-        else:
-            for i in range(start_index, len(self._escursioni_parco):
-                escursione = self._escursioni_parco[i]
 
-                punti_interesse_ok = punti_usati.intersection(escursione.punti_interesse)
-                giorni_ok = giorni
+        for i in range(start_index, len(self._escursioni_parco)):
+            escursione = self._escursioni_parco[i]  #prende ogni escursione del parco dalla successiva alla precedente del parco scelto
 
+            punti_interesse_ok = not punti_usati.intersection(escursione.punti_interesse) #evita doppioni punti interesse
+            giorni_ok = self._max_giorni > durata_corrente + escursione.durata_giorni
+            costo_ok = self._max_budget > costo_corrente + escursione.costo
 
-                self._ricorsione(self, start_index, pacchetto_parziale, nuova_durata, nuovo_costo,valore_corrente, punti_usati)
+            if punti_interesse_ok and giorni_ok and costo_ok:
+                nuova_durata = durata_corrente + escursione.durata_giorni
+                nuovo_costo = costo_corrente + escursione.costo
+                punti_usati.remove(escursione.punti_interesse)
+
+                self._ricorsione(start_index + 1, pacchetto_parziale, nuova_durata, nuovo_costo,valore_corrente, punti_usati)
 
 
 
